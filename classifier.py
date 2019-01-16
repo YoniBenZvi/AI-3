@@ -3,14 +3,15 @@ import operator
 
 
 class knn_classifier(abstract_classifier):
-    def __init__(self, k=5):
+    def __init__(self, data, labels, k=5):
         self.k = k
-        self.data = load_data()
+        self.data = data
+        self.labels = labels
 
-    def calculate_final_classification(self, k_nearest_neighbours):
+    def calculate_final_classification(self, k_nearest_neighbours) -> int:
         neighbour_classifications_counter = [0, 0]
         for example in k_nearest_neighbours:
-            if self.data[1][example[0]] == 0:
+            if self.labels[example[0]] == 0:
                 neighbour_classifications_counter[0] = neighbour_classifications_counter[0] + 1
             else:
                 neighbour_classifications_counter[1] = neighbour_classifications_counter[1] + 1
@@ -19,8 +20,8 @@ class knn_classifier(abstract_classifier):
     def classify(self, example_to_classify) -> int:
         neighbours = {}
         i = 0
-        for row in self.data[0]:
-            neighbours[i] = distance_euclidean(example_to_classify, row)
+        for example in self.data:
+            neighbours[i] = distance_euclidean(example_to_classify, example)
             i = i + 1
         examples_sorted_by_distance = sorted(neighbours.items(), key=operator.itemgetter(1))
         k_nearest_neighbours = examples_sorted_by_distance[:self.k]
@@ -34,9 +35,22 @@ def distance_euclidean(list1, list2):
     return accumulator ** .5
 
 
+class knn_factory(abstract_classifier_factory):
+    def __init__(self, k):
+        self.k = k
+
+    def train(self, data, labels) -> knn_classifier:
+        return knn_classifier(data, labels, self.k)
+
+
 def main():
-    c = knn_classifier()
-    result = c.classify(c.data[2][0])
+    data = load_data()
+    labels = data[1]
+    test_set = data[2]
+    data = data[0]
+    factory = knn_factory(k=5)
+    classifier = factory.train(data=data, labels=labels)
+    result = classifier.classify(test_set[0])
     print(result)
 
 
