@@ -3,6 +3,13 @@ import numpy as np
 import operator
 
 
+def distance_euclidean(list1, list2):
+    accumulator = 0
+    for x, y in zip(list1, list2):
+        accumulator = accumulator + (x - y) ** 2
+    return accumulator ** .5
+
+
 class knn_classifier(abstract_classifier):
     def __init__(self, data, labels, k=5):
         self.k = k
@@ -27,13 +34,6 @@ class knn_classifier(abstract_classifier):
         examples_sorted_by_distance = sorted(neighbours.items(), key=operator.itemgetter(1))
         k_nearest_neighbours = examples_sorted_by_distance[:self.k]
         return self.calculate_final_classification(k_nearest_neighbours)
-
-
-def distance_euclidean(list1, list2):
-    accumulator = 0
-    for x, y in zip(list1, list2):
-        accumulator = accumulator + (x - y) ** 2
-    return accumulator ** .5
 
 
 class knn_factory(abstract_classifier_factory):
@@ -85,6 +85,7 @@ def split_groups_to_folds(pos_examples, neg_examples, num_folds) -> list:
 
 def export_to_pickle_file(groups: list):
     for i in range(len(groups)):
+        # TODO: why f and not r?
         path = f'./data/ecg_fold_{i + 1}.data'
         with open(path, 'wb') as file:
             pickle.dump(groups[i], file)
@@ -103,6 +104,7 @@ def split_crosscheck_groups(dataset: (np.ndarray, list, np.ndarray), num_folds: 
     labels = np.expand_dims(labels, axis=1)
     data = np.hstack([data, labels])  # adding the labels list as
     # the last (rightmost) column of the data matrix
+    #TODO: assert it shuffles rows and not columns
     np.random.shuffle(data)  # randomly shuffling the order of the examples and their labels
     pos_examples, neg_examples = split_to_pos_and_neg_groups(data)
     groups = split_groups_to_folds(pos_examples, neg_examples, num_folds)
@@ -111,9 +113,11 @@ def split_crosscheck_groups(dataset: (np.ndarray, list, np.ndarray), num_folds: 
 
 
 def load_k_fold_data(i: int) -> (np.ndarray, list):
+    # TODO: why rf and not r?
     path = rf'data/ecg_fold_{i}.data'
     with open(path, 'rb') as file:
         examples = pickle.load(file)
+        # TODO: should be -1 in both?
     train_features = examples[:, :-1]
     train_labels = list(examples[:, -1])
     return train_features, train_labels
