@@ -90,7 +90,6 @@ def export_to_pickle_file(groups: list):
             pickle.dump(groups[i], file)
 
 
-
 def did_use_all_dataset(groups) -> bool:
     accumulator = 0
     for group in groups:
@@ -111,6 +110,15 @@ def split_crosscheck_groups(dataset: (np.ndarray, list, np.ndarray), num_folds: 
     export_to_pickle_file(groups)
 
 
+def load_k_fold_data(i: int) -> (np.ndarray, list):
+    path = rf'data/ecg_fold_{i}.data'
+    with open(path, 'rb') as file:
+        examples = pickle.load(file)
+    train_features = examples[:, :-1]
+    train_labels = list(examples[:, -1])
+    return train_features, train_labels
+
+
 def main():
     # dataset is a 3-tuple consisting of:
     # (2D ndarray of training features, list of labels,2D ndarray of testing features)
@@ -122,7 +130,8 @@ def main():
     # classifier = factory.train(data=data, labels=labels)
     # result = classifier.classify(test_set[0])
     # print(result)
-    split_crosscheck_groups(dataset, 17)
+    # split_crosscheck_groups(dataset, 17)
+    # load_k_fold_data(16)
 
 
 if __name__ == '__main__':
