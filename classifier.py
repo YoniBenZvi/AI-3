@@ -130,8 +130,8 @@ def main():
     # classifier = factory.train(data=data, labels=labels)
     # result = classifier.classify(test_set[0])
     # print(result)
-    # split_crosscheck_groups(dataset, 17)
-    # load_k_fold_data(16)
+    # split_crosscheck_groups(dataset, 2)
+    # load_k_fold_data(2)
 
 
 if __name__ == '__main__':
