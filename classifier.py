@@ -3,13 +3,6 @@ import numpy as np
 import operator
 
 
-def distance_euclidean(list1, list2):
-    accumulator = 0
-    for x, y in zip(list1, list2):
-        accumulator = accumulator + (x - y) ** 2
-    return accumulator ** .5
-
-
 class knn_classifier(abstract_classifier):
     def __init__(self, data, labels, k=5):
         self.k = k
@@ -34,6 +27,13 @@ class knn_classifier(abstract_classifier):
         examples_sorted_by_distance = sorted(neighbours.items(), key=operator.itemgetter(1))
         k_nearest_neighbours = examples_sorted_by_distance[:self.k]
         return self.calculate_final_classification(k_nearest_neighbours)
+
+
+def distance_euclidean(list1, list2):
+    accumulator = 0
+    for x, y in zip(list1, list2):
+        accumulator = accumulator + (x - y) ** 2
+    return accumulator ** .5
 
 
 class knn_factory(abstract_classifier_factory):
@@ -117,7 +117,7 @@ def load_k_fold_data(i: int) -> (np.ndarray, list):
     path = rf'data/ecg_fold_{i}.data'
     with open(path, 'rb') as file:
         examples = pickle.load(file)
-        # TODO: should be -1 in both?
+    # TODO: should be -1 in both?
     train_features = examples[:, :-1]
     train_labels = list(examples[:, -1])
     return train_features, train_labels
