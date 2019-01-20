@@ -119,6 +119,11 @@ def load_k_fold_data(i: int) -> (np.ndarray, list):
     return train_features, train_labels
 
 
+def evaluate(classifier_factory: abstract_classifier_factory, k: int) -> (float, float):
+    num_folds = k
+    for fold in range(num_folds):
+
+
 def main():
     # dataset is a 3-tuple consisting of:
     # (2D ndarray of training features, list of labels,2D ndarray of testing features)
@@ -132,6 +137,11 @@ def main():
     # print(result)
     # split_crosscheck_groups(dataset, 2)
     # load_k_fold_data(2)
+
+    patients, labels, test = load_data()
+    split_crosscheck_groups(patients, labels, 2)
+    knn3 = knn_factory(3)
+    accuracy, error = evaluate(knn3, 2)
 
 
 if __name__ == '__main__':
