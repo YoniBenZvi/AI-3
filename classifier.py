@@ -1,6 +1,8 @@
 from hw3_utils import *
 import numpy as np
 import operator
+import csv
+from sklearn.tree import DecisionTreeClassifier
 
 
 class knn_classifier(abstract_classifier):
@@ -123,21 +125,26 @@ def load_k_fold_data(i: int) -> (np.ndarray, list):
     return train_features, train_labels
 
 
-def calculate_evaluation_accuracy_error(data, factory):
+def calculate_evaluation_accuracy_error(data, factory) -> (float, float):
     error_count = 0
     experiment_count = 0
     for i in range(len(data)):
+        training_set = None
         test_set = data[i]
-        training_set = (None, None)
         for j in range(len(data)):
-            if i == j: continue
-            np.vstack((training_set[0], data[j][0]))
-            np.vstack((training_set[1], data[j][1]))
-            classifier = factory.train(training_set[0], training_set[1])
-            for example, n in zip(test_set, range(len(test_set))):
-                experiment_count += 1
-                if classifier.classify(example) is not test_set[1][n]:
-                    error_count += 1
+            if i == j:
+                continue
+            else:
+                if training_set is None:
+                    training_set = (data[j][0], data[j][1])
+                else:
+                    np.vstack((training_set[0], data[j][0]))
+                    np.vstack((training_set[1], data[j][1]))
+        classifier = factory.train(training_set[0], training_set[1])
+        for example, n in zip(test_set[0], range(len(test_set[0]))):
+            experiment_count += 1
+            if classifier.classify(example) != test_set[1][n]:
+                error_count += 1
     avg_error = error_count / experiment_count
     return 1 - avg_error, avg_error
 
@@ -145,8 +152,8 @@ def calculate_evaluation_accuracy_error(data, factory):
 def evaluate(classifier_factory: abstract_classifier_factory, k: int) -> (float, float):
     num_folds = k
     data = {}
-    for i in range(num_folds):
-        data[i] = load_k_fold_data(i)
+    for i in range(1, num_folds + 1):
+        data[i - 1] = load_k_fold_data(i)
     # data is now a dictionary of the form {i:(features, labels)} where i is the key
     # and (features, labels) is the value, which is a tuple of the features matrix
     # and the labels vector
@@ -154,24 +161,46 @@ def evaluate(classifier_factory: abstract_classifier_factory, k: int) -> (float,
     return calculate_evaluation_accuracy_error(data, classifier_factory)
 
 
+def export_to_csv(results):
+    with open('experiments6.csv', 'w', newline='') as file:
+        wr = csv.writer(file, quoting=csv.QUOTE_ALL)
+        for row in results:
+            wr.writerow(list(row))
+
+
+def Question5():
+    k_list = [1, 3, 5, 7, 13]
+    results = []
+    for k in k_list:
+        print(f'k={k}')
+        factory = knn_factory(k)
+        accuracy, error = evaluate(factory, 2)
+        results.append((k, accuracy, error))
+    export_to_csv(results)
+
+
+class ID3Classifier(DecisionTreeClassifier):
+
+
+def Question7():
+    classifier = DecisionTreeClassifier(criterion="entropy")
+
 def main():
     # dataset is a 3-tuple consisting of:
     # (2D ndarray of training features, list of labels,2D ndarray of testing features)
-    dataset = load_data()
-    data = dataset[0]
-    labels = dataset[1]
-    test_set = dataset[2]
+    # dataset = load_data()
+    # data = dataset[0]
+    # labels = dataset[1]
+    # test_set = dataset[2]
     # factory = knn_factory(k=5)
     # classifier = factory.train(data=data, labels=labels)
     # result = classifier.classify(test_set[0])
     # print(result)
-    # split_crosscheck_groups(dataset, 2)
     # load_k_fold_data(2)
-
-    patients, labels, test = load_data()
-    split_crosscheck_groups(patients, labels, 2)
-    knn3 = knn_factory(3)
-    accuracy, error = evaluate(knn3, 2)
+    # patients, labels, test = load_data()
+    # split_crosscheck_groups(patients, labels, 2)
+    # Question5()
+    Question7()
 
 
 if __name__ == '__main__':
