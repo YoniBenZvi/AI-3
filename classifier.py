@@ -214,7 +214,7 @@ class perceptron_classifier:
         :param labels: the correct labels of the data
         """
 
-        self.inner_classifier = Perceptron(tol=1e-3, random_state=0)
+        self.inner_classifier = Perceptron(tol=1e-3)
         self.inner_classifier.fit(data, labels)
 
     def classify(self, features) -> int:
