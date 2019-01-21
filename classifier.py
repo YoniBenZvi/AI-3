@@ -186,7 +186,7 @@ def question5():
     export_to_csv(results, 'experiments6.csv')
 
 
-class ID3_classifier:
+class ID3_classifier(abstract_classifier):
     def __init__(self, data: np.ndarray, labels: np.ndarray):
         """
         This constructor also trains the classifier by creating the decision tree.
@@ -206,7 +206,7 @@ class ID3_factory(abstract_classifier_factory):
         return ID3_classifier(data, labels)
 
 
-class perceptron_classifier:
+class perceptron_classifier(abstract_classifier):
     def __init__(self, data: np.ndarray, labels: np.ndarray):
         """
         This constructor also trains the classifier by creating the decision tree.
@@ -214,7 +214,7 @@ class perceptron_classifier:
         :param labels: the correct labels of the data
         """
 
-        self.inner_classifier = Perceptron(tol=1e-3, random_state=0)
+        self.inner_classifier = Perceptron(tol=1e-3)
         self.inner_classifier.fit(data, labels)
 
     def classify(self, features) -> int:
