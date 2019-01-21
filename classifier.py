@@ -85,13 +85,15 @@ def split_groups_to_folds(pos_examples, neg_examples, num_folds) -> list:
 
 def export_to_pickle_file(groups: list):
     for i in range(len(groups)):
-        # TODO: why f and not r?
         path = f'./data/ecg_fold_{i + 1}.data'
         with open(path, 'wb') as file:
             pickle.dump(groups[i], file)
 
 
 def did_use_all_dataset(groups) -> bool:
+    """
+    Debugging purposes only
+    """
     accumulator = 0
     for group in groups:
         accumulator += np.shape(group)[0]
@@ -104,7 +106,7 @@ def split_crosscheck_groups(dataset: (np.ndarray, list, np.ndarray), num_folds: 
     labels = np.expand_dims(labels, axis=1)
     data = np.hstack([data, labels])  # adding the labels list as
     # the last (rightmost) column of the data matrix
-    #TODO: assert it shuffles rows and not columns
+    # TODO: assert it shuffles rows and not columns
     np.random.shuffle(data)  # randomly shuffling the order of the examples and their labels
     pos_examples, neg_examples = split_to_pos_and_neg_groups(data)
     groups = split_groups_to_folds(pos_examples, neg_examples, num_folds)
@@ -113,14 +115,43 @@ def split_crosscheck_groups(dataset: (np.ndarray, list, np.ndarray), num_folds: 
 
 
 def load_k_fold_data(i: int) -> (np.ndarray, list):
-    # TODO: why rf and not r?
     path = rf'data/ecg_fold_{i}.data'
     with open(path, 'rb') as file:
         examples = pickle.load(file)
-    # TODO: should be -1 in both?
     train_features = examples[:, :-1]
     train_labels = list(examples[:, -1])
     return train_features, train_labels
+
+
+def calculate_evaluation_accuracy_error(data, factory):
+    error_count = 0
+    experiment_count = 0
+    for i in range(len(data)):
+        test_set = data[i]
+        training_set = (None, None)
+        for j in range(len(data)):
+            if i == j: continue
+            np.vstack((training_set[0], data[j][0]))
+            np.vstack((training_set[1], data[j][1]))
+            classifier = factory.train(training_set[0], training_set[1])
+            for example, n in zip(test_set, range(len(test_set))):
+                experiment_count += 1
+                if classifier.classify(example) is not test_set[1][n]:
+                    error_count += 1
+    avg_error = error_count / experiment_count
+    return 1 - avg_error, avg_error
+
+
+def evaluate(classifier_factory: abstract_classifier_factory, k: int) -> (float, float):
+    num_folds = k
+    data = {}
+    for i in range(num_folds):
+        data[i] = load_k_fold_data(i)
+    # data is now a dictionary of the form {i:(features, labels)} where i is the key
+    # and (features, labels) is the value, which is a tuple of the features matrix
+    # and the labels vector
+
+    return calculate_evaluation_accuracy_error(data, classifier_factory)
 
 
 def main():
@@ -136,6 +167,11 @@ def main():
     # print(result)
     # split_crosscheck_groups(dataset, 2)
     # load_k_fold_data(2)
+
+    patients, labels, test = load_data()
+    split_crosscheck_groups(patients, labels, 2)
+    knn3 = knn_factory(3)
+    accuracy, error = evaluate(knn3, 2)
 
 
 if __name__ == '__main__':
