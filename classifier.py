@@ -4,6 +4,7 @@ import operator
 import csv
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import Perceptron
+from sklearn.naive_bayes import MultinomialNB
 
 
 class knn_classifier(abstract_classifier):
@@ -27,7 +28,8 @@ class knn_classifier(abstract_classifier):
         for example in self.data:
             neighbours[i] = distance_euclidean(example_to_classify, example)
             i = i + 1
-        examples_sorted_by_distance = sorted(neighbours.items(), key=operator.itemgetter(1))
+        # examples_sorted_by_distance = sorted(neighbours.items(), key=operator.itemgetter(1))
+        examples_sorted_by_distance = sorted(neighbours.items(), key=lambda tup: tup[1])
         k_nearest_neighbours = examples_sorted_by_distance[:self.k]
         return self.calculate_final_classification(k_nearest_neighbours)
 
@@ -103,7 +105,7 @@ def did_use_all_dataset(groups) -> bool:
     return accumulator == 1000
 
 
-def split_crosscheck_groups(dataset: (np.ndarray, list, np.ndarray), num_folds: int = 2):
+def split_crosscheck_groups(dataset: (np.ndarray, list, np.ndarray), num_folds: int = 2, is_testing=False):
     data = dataset[0]
     labels = np.asarray(dataset[1])
     labels = np.expand_dims(labels, axis=1)
@@ -142,7 +144,7 @@ def calculate_evaluation_accuracy_error(data, factory) -> (float, float):
                     np.vstack((training_set[0], data[j][0]))
                     np.vstack((training_set[1], data[j][1]))
         classifier = factory.train(training_set[0], training_set[1])
-        if factory is knn_factory:
+        if isinstance(factory, knn_factory):
             for example, n in zip(test_set[0], range(len(test_set[0]))):
                 experiment_count += 1
                 if classifier.classify(example) != test_set[1][n]:
@@ -206,6 +208,57 @@ class ID3_factory(abstract_classifier_factory):
         return ID3_classifier(data, labels)
 
 
+class MultinomialNB_classifier(abstract_classifier):
+    def __init__(self, data: np.ndarray, labels: np.ndarray):
+        """
+        This constructor also trains the classifier by creating the decision tree.
+        :param data: the unlabeled data of the dataset
+        :param labels: the correct labels of the data
+        """
+
+        self.inner_classifier = MultinomialNB()
+        self.inner_classifier.fit(data, labels)
+
+    def classify(self, features) -> int:
+        return self.inner_classifier.predict(features)
+
+
+class MultinomialNB_factory(abstract_classifier_factory):
+    def train(self, data, labels) -> MultinomialNB_classifier:
+        return MultinomialNB_classifier(data, labels)
+
+
+class Contest_classifier(abstract_classifier):
+    def __init__(self, data: np.ndarray, labels: np.ndarray):
+        """
+        This constructor also trains the classifier by creating the decision tree.
+        :param data: the unlabeled data of the dataset
+        :param labels: the correct labels of the data
+        """
+        self.inner_factories = [perceptron_factory(), ID3_factory(), knn_factory(1), knn_factory(5), knn_factory(13)]
+        self.inner_classifiers = []
+        for factory in self.inner_factories:
+            self.inner_classifiers.append(factory.train(data, labels))
+        for c in self.inner_classifiers:
+            if not isinstance(c, knn_classifier):
+                c.inner_classifier.fit(data, labels)
+
+    def classify(self, features) -> int:
+        classification_votes = []
+        for c in self.inner_classifiers:
+            if isinstance(c, knn_classifier):
+                classification_votes.append(c.classify(features))
+            else:
+                classification_votes.append(c.inner_classifier.predict(features))
+
+        return 0 if classification_votes.count(0) > classification_votes.count(1) else 1
+
+
+class Contest_factory(abstract_classifier_factory):
+    def train(self, data, labels) -> Contest_classifier:
+        return Contest_classifier(data, labels)
+
+
 class perceptron_classifier(abstract_classifier):
     def __init__(self, data: np.ndarray, labels: np.ndarray):
         """
@@ -242,6 +295,74 @@ def question7():
     export_to_csv(perceptron_results, 'experiments12perceptron.csv')
 
 
+def evaluate_without_known_bad_features(classifier_factory: abstract_classifier_factory, k: int) -> (float, float):
+    num_folds = k
+    data = {}
+    known_bad_features = [33]
+    for i in range(1, num_folds + 1):
+        data[i - 1] = load_k_fold_data(i)
+        for bad_feature in known_bad_features:
+            data[i - 1] = (np.delete(data[i - 1][0], bad_feature, 1), data[i - 1][1])
+    for i in range(1, num_folds + 1):
+        data[i - 1] = load_k_fold_data(i)
+    # data is now a dictionary of the form {i:(features, labels)} where i is the key
+    # and (features, labels) is the value, which is a tuple of the features matrix
+    # and the labels vector
+    return calculate_evaluation_accuracy_error(data, classifier_factory)
+
+
+def evaluate_without_bad_features(classifier_factory: abstract_classifier_factory, k: int):
+    num_folds = k
+    data = {}
+    known_bad_features = [33]
+    for i in range(1, num_folds + 1):
+        data[i - 1] = load_k_fold_data(i)
+        for bad_feature in known_bad_features:
+            data[i - 1] = (np.delete(data[i - 1][0], bad_feature, 1), data[i - 1][1])
+
+    accuracies = {}
+    for bad_feature in range(np.shape(data[1][0])[1]):
+        data_without_feature = data.copy()
+        for fold in range(num_folds):
+            data_without_feature[fold] = (np.delete(data_without_feature[fold][0], bad_feature, 1),
+                                          data_without_feature[fold][1])
+        accuracies[bad_feature] = calculate_evaluation_accuracy_error(data_without_feature, classifier_factory)[0]
+    sorted_accuracies = sorted(accuracies.items(), key=lambda tup: tup[1], reverse=True)
+    print(f'{classifier_factory} classifier: {sorted_accuracies[:20]}')
+
+    # data is now a dictionary of the form {i:(features, labels)} where i is the key
+    # and (features, labels) is the value, which is a tuple of the features matrix
+    # and the labels vector
+
+
+def checking_bad_features(dataset):
+    # creating folds
+    num_folds = 2
+    # split_crosscheck_groups(dataset, num_folds=num_folds, is_testing=True)
+    # print('splitting to folds completed.')
+
+    # evaluate_without_bad_features(ID3_factory(), num_folds)
+    # evaluate_without_bad_features(perceptron_factory(), num_folds)
+
+    # Naive Bayesian
+    # factory = MultinomialNB_factory()
+    # evaluate_without_bad_features(factory, num_folds)
+
+    # KNN
+    k_list = [1, 3, 5, 7, 13]
+    results = []
+    for k in k_list:
+        print(f'k={k}')
+        accuracy, error = evaluate_without_known_bad_features(knn_factory(k), num_folds)
+        results.append((k, accuracy, error))
+    print(results)
+
+
+def contest(num_folds=2):
+    accuracy, error = evaluate(Contest_factory(), num_folds)
+    print(accuracy, error)
+
+
 def main():
     # dataset is a 3-tuple consisting of:
     # (2D ndarray of training features, list of labels,2D ndarray of testing features)
@@ -257,8 +378,10 @@ def main():
     # patients, labels, test = load_data()
     # split_crosscheck_groups(patients, labels, 2)
     # question5()
-    question7()
-
+    # question7()
+    # dataset = load_data()
+    # checking_bad_features(dataset)
+    contest(2)
 
 if __name__ == '__main__':
     main()
