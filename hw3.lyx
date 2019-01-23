@@ -121,6 +121,242 @@
 \end_layout
 
 \begin_layout Section*
+מבנה הקוד
+\end_layout
+
+\begin_layout Standard
+פונקציית ה-
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+main
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+נמצאת בקובץ
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+classifier.py
+\lang hebrew
+.
+ ה- 
+\lang english
+main
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+מכיל את הפונקציות שמריצות את הקוד של שאלות 
+\begin_inset Formula $3,5,7$
+\end_inset
+
+.
+ כמו-כן, הפונקציה האחרונה מייצרת את קובץ ה-
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+results.data
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+של חלק ג'.
+ לבסוף, בפונקציית ה-
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+main
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ובשאר הקובץ ניתן לראות פונקציות ששומשו לבדיקות וניסויים.
+ הסבר מפורט יותר מופיע בחלק ג'.
+\end_layout
+
+\begin_layout Section*
 חלק ב'
 \end_layout
 
@@ -318,6 +554,17 @@ num_folds
 wide false
 sideways false
 status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename knn.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
 
 \begin_layout Plain Layout
 \begin_inset Caption Standard
@@ -767,6 +1014,707 @@ nn
 \end_inset
 
 (.
+\end_layout
+
+\begin_layout Section*
+חלק ג'
+\end_layout
+
+\begin_layout Standard
+נסיונות השיפור שבחרנו לנסות על-מנת למקסם את אחוזי הדיוק של המסווג היו:
+\end_layout
+
+\begin_layout Enumerate
+שימוש במס' אי-זוגי של מסווגים שונים על אותו אובייקט מבחן, והכרעה עפ
+\begin_inset Quotes srd
+\end_inset
+
+י רוב קולות בהצבעה.
+ המסווגים שבחרנו הם
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+ID3
+\lang hebrew
+, מסווג
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+Perceptron
+\lang hebrew
+, ומסווג
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+nn
+\lang hebrew
+
+\begin_inset Formula $k$
+\end_inset
+
+ עבור 
+\begin_inset Formula $k=1$
+\end_inset
+
+ )שהניב את התוצאות המדוייקות ביותר בתהליך הפיתוח(.
+ נעיר כי את רמת הדיוק של המסווג לאורך כל התהליך, בחנו בעזרת שיטת
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+Stratified 
+\begin_inset Formula $k$
+\end_inset
+
+-fold cross validation
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+עבור ערכי 
+\begin_inset Formula $k$
+\end_inset
+
+ שונים, כדי לקבל תוצאות ממוצעות מדוייקות ככל הניתן מתוך קבוצת המבחן.
+\end_layout
+
+\begin_layout Enumerate
+מסווג נוסף ששקלנו להכניס להצבעה היה מסווג בייסיאני נאיבי מתוך ספריית
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+sklearn
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+)שתי המחלקות שמימשנו בעצמנו 
+\lang english
+MultinomialNB_classifier
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ו- 
+\lang english
+MultinomialNB_factory
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+עדיין תחת הערה בקוד(.
+ המסווג מסוג
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+MAP
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+שקיים בספריה )
+\lang english
+MultinomialNB
+\lang hebrew
+( עובד עם תכונות שערכיהן נעים בטווח 
+\begin_inset Formula $\left[0,1\right]$
+\end_inset
+
+.
+ מאחר והתכונות שקיבלנו בתרגיל אינן בטווח זה, לא רצינו לשנות או לנרמל אותן
+ מתוך חשש שיפגע בדיוק הסיווג )כי לדוגמא, יתכן שחלק מהתכונות הן ב-
+\lang english
+scale
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+לוגריתמי, ונרמול ליניארי ישנה את ה-
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+data
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+באופן מהותי ולא מדויק(.
+ מסווגים בייסיאנים נוספים בספריה שמצאנו הניחו התפלגויות ידועות של הסיווגים
+ שהיו שונות מההתפלגות האמיתית שהתקבלה בקבוצת האימון, ולכן השימוש בהם לא
+ היה נכון מבחינה עקרונית.
+\end_layout
+
+\begin_layout Enumerate
+הסרת תכונות החשודות כפחות רלוונטיות לסיווג.
+ כדי למצוא את התכונות שהורידו את אחוזי הדיוק של המסווג, נקטנו בתהליך אלימינציה
+ שבו הסרנו בכל צעד תכונה יחידה מתוך סט התכונות, ובדקנו את תוצאת הסיווג של
+ מסווגי ה-
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+Perceptron
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+וה-
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+ID3
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+)ללא
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+\lang english
+nn
+\lang hebrew
+
+\begin_inset Formula $k$
+\end_inset
+
+ בשל זמן סיווג איטי יותר( לאחר הסרת תכונה זו )הפונקציות 
+\lang english
+checking_bad_features
+\lang hebrew
+, 
+\lang english
+evaluate_without_bad_features
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ו- 
+\lang english
+evaluate_without_known_bad_features
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang hebrew
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+שימשו למטרה זו(.
+ התבוננו בקבוצת החיתוך של שתי קבוצות התכונות הבעייתיות )אחת לכל מסווג(,
+ והסרנו תכונות אלו
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+מקבוצות האימון והמבחן.
+ לבסוף הסרנו בסה
+\begin_inset Quotes srd
+\end_inset
+
+כ 
+\begin_inset Formula $5$
+\end_inset
+
+ תכונות שאכן הניבו שיפור קטן בדיוק הסיווג.
+\end_layout
+
+\begin_layout Enumerate
+דרך נוספת ששקלנו לשיפור הסיווג הייתה זיהוי והסרת דוגמאות רועשות.
+ הדרך שבה חשבנו לעשות זאת, היא להתבונן בדוגמאות שסיווגן נכשל עבור כל המסווגים
+ באופן גורף.
+ דוגמאות אלו הינן מועמדים טובים להיות דוגמאות רועשות.
+ אך, משום שמהסווגים אינם מניבים תוצאות מושלמות, יתכן מאד שדוגמא שאינה רועשת
+ תיחשב רועשת באופן שגוי.
+ במילים אחרות, כדי למצוא דוגמאות רועשות אנו צריכים מסווג טוב, וכדי לבנות
+ מסווג טוב אנו צריכים לדעת להיפטר מדוגמאות רועשות, וזו כמובן בעיה מעגלית.
+ לכן, לבסוף זנחנו את גישת השיפור הזו )למרות שיתכן וטעינו(.
 \end_layout
 
 \end_body
