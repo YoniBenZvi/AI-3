@@ -142,25 +142,27 @@ def calculate_evaluation_accuracy_error(data, factory) -> (float, float):
                 else:
                     # TODO: np.vstack((training_set[1], data[j][1])) doesn't work when different number of rows (for a vector) +
                     # it doesn't change the matrix/vector, it returns the new one!
-                    print(np.shape(training_set[0]))
-                    print(np.shape(data[j][0]))
-                    print(np.shape(training_set[1]))
-                    print(np.shape(data[j][1]))
-
-                    print(np.shape(np.vstack((training_set[0], data[j][0]))))
-                    print(np.shape(np.vstack((training_set[1], data[j][1]))))
 
                     # print(np.shape(training_set[0]))
                     # print(np.shape(data[j][0]))
                     # print(np.shape(training_set[1]))
                     # print(np.shape(data[j][1]))
-                    #
-                    # expansion1 = np.expand_dims(training_set[1], axis=1)
-                    # expansion2 = np.expand_dims(data[j][1], axis=1)
-                    # np.vstack((expansion1, expansion2))
-                    # np.squeeze(expansion1, axis=1).shape
-                    # training_set[1] = expansion1
+
+                    expansion1 = np.expand_dims(training_set[1], axis=1)
+
+                    expansion2 = np.expand_dims(data[j][1], axis=1)
+
+                    print(np.shape(expansion1))
+                    print(np.shape(expansion2))
+
+                    training_set = (np.vstack((training_set[0], data[j][0])) , np.vstack((expansion1, expansion2)))
+
+
+                    # print(np.shape(training_set[0]))
                     # print(np.shape(training_set[1]))
+
+
+
 
         classifier = factory.train(training_set[0], training_set[1])
         if isinstance(factory, knn_factory) or isinstance(factory, Contest_factory):
