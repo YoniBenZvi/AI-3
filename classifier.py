@@ -4,6 +4,7 @@ import csv
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import Perceptron
 
+
 # from sklearn.naive_bayes import MultinomialNB
 
 def distance_euclidean(list1, list2):
@@ -140,29 +141,8 @@ def calculate_evaluation_accuracy_error(data, factory) -> (float, float):
                 if training_set is None:
                     training_set = (data[j][0], data[j][1])
                 else:
-                    # TODO: np.vstack((training_set[1], data[j][1])) doesn't work when different number of rows (for a vector) +
-                    # it doesn't change the matrix/vector, it returns the new one!
 
-                    # print(np.shape(training_set[0]))
-                    # print(np.shape(data[j][0]))
-                    # print(np.shape(training_set[1]))
-                    # print(np.shape(data[j][1]))
-
-                    expansion1 = np.expand_dims(training_set[1], axis=1)
-
-                    expansion2 = np.expand_dims(data[j][1], axis=1)
-
-                    print(np.shape(expansion1))
-                    print(np.shape(expansion2))
-
-                    training_set = (np.vstack((training_set[0], data[j][0])) , np.vstack((expansion1, expansion2)))
-
-
-                    # print(np.shape(training_set[0]))
-                    # print(np.shape(training_set[1]))
-
-
-
+                    training_set = (np.vstack((training_set[0], data[j][0])), training_set[1] + data[j][1])
 
         classifier = factory.train(training_set[0], training_set[1])
         if isinstance(factory, knn_factory) or isinstance(factory, Contest_factory):
@@ -380,19 +360,30 @@ def checking_bad_features(dataset):
         results.append((k, accuracy, error))
     print(results)
 
+def evaluate_for_contest(classifier_factory: abstract_classifier_factory, k: int) -> (float, float):
+    num_folds = k
+    data = {}
+    known_bad_features = [33]
+    for i in range(1, num_folds + 1):
+        data[i - 1] = load_k_fold_data(i)
+        for bad_feature in known_bad_features:
+            data[i - 1] = (np.delete(data[i - 1][0], bad_feature, 1), data[i - 1][1])
+    # data is now a dictionary of the form {i:(features, labels)} where i is the key
+    # and (features, labels) is the value, which is a tuple of the features matrix
+    # and the labels vector
+    return calculate_evaluation_accuracy_error(data, classifier_factory)
 
 def contest(num_folds=2):
-    accuracy, error = evaluate(Contest_factory(), num_folds)
+    accuracy, error = evaluate_for_contest(Contest_factory(), num_folds)
     print(accuracy, error)
 
 
 def main():
     # dataset is a 3-tuple consisting of:
     # (2D ndarray of training features, list of labels,2D ndarray of testing features)
-    num_folds = 4
+    # num_folds = 7
     dataset = load_data()
-    split_crosscheck_groups(dataset, num_folds)
-    print("split complete")
+
     # data = dataset[0]
     # labels = dataset[1]
     # test_set = dataset[2]
@@ -407,7 +398,10 @@ def main():
     # question7()
     # dataset = load_data()
     # checking_bad_features(dataset)
-    contest(num_folds)
+    for num_folds in {4,7,10}:
+        split_crosscheck_groups(dataset, num_folds)
+        print("split complete")
+        contest(num_folds)
 
 
 if __name__ == '__main__':
