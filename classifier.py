@@ -5,8 +5,6 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import Perceptron
 
 
-# from sklearn.naive_bayes import MultinomialNB
-
 def distance_euclidean(list1, list2):
     accumulator = 0
     for x, y in zip(list1, list2):
@@ -176,6 +174,17 @@ def export_to_csv(results, filename):
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in results:
             wr.writerow(list(row))
+
+
+def question3():
+    num_folds = 2
+    dataset = load_data()
+    features = dataset[0]
+    labels = np.asarray([[row] for row in dataset[1]])
+    data = np.hstack((features, labels))
+    pos_examples, neg_examples = split_to_pos_and_neg_groups(data)
+    groups = split_groups_to_folds(pos_examples=pos_examples, neg_examples=neg_examples, num_folds=num_folds)
+    export_to_pickle_file(groups=groups)
 
 
 def question5():
@@ -360,6 +369,7 @@ def checking_bad_features(dataset):
         results.append((k, accuracy, error))
     print(results)
 
+
 def evaluate_for_contest(classifier_factory: abstract_classifier_factory, k: int) -> (float, float):
     num_folds = k
     data = {}
@@ -373,35 +383,22 @@ def evaluate_for_contest(classifier_factory: abstract_classifier_factory, k: int
     # and the labels vector
     return calculate_evaluation_accuracy_error(data, classifier_factory)
 
+
 def contest(num_folds=2):
     accuracy, error = evaluate_for_contest(Contest_factory(), num_folds)
     print(accuracy, error)
 
 
 def main():
-    # dataset is a 3-tuple consisting of:
     # (2D ndarray of training features, list of labels,2D ndarray of testing features)
-    # num_folds = 7
-    dataset = load_data()
 
-    # data = dataset[0]
-    # labels = dataset[1]
-    # test_set = dataset[2]
-    # factory = knn_factory(k=5)
-    # classifier = factory.train(data=data, labels=labels)
-    # result = classifier.classify(test_set[0])
-    # print(result)
-    # load_k_fold_data(num_folds)
-    # patients, labels, test = load_data()
-
-    # question5()
+    # question3()
+    question5()
     # question7()
-    # dataset = load_data()
-    # checking_bad_features(dataset)
-    for num_folds in {4,7,10}:
-        split_crosscheck_groups(dataset, num_folds)
-        print("split complete")
-        contest(num_folds)
+    # for num_folds in {4, 7, 10}:
+    #     split_crosscheck_groups(dataset, num_folds)
+    #     print("split complete")
+    #     contest(num_folds)
 
 
 if __name__ == '__main__':
