@@ -1,10 +1,16 @@
 from hw3_utils import *
 import numpy as np
-import operator
 import csv
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import Perceptron
-from sklearn.naive_bayes import MultinomialNB
+
+# from sklearn.naive_bayes import MultinomialNB
+
+def distance_euclidean(list1, list2):
+    accumulator = 0
+    for x, y in zip(list1, list2):
+        accumulator = accumulator + (x - y) ** 2
+    return accumulator ** .5
 
 
 class knn_classifier(abstract_classifier):
@@ -32,13 +38,6 @@ class knn_classifier(abstract_classifier):
         examples_sorted_by_distance = sorted(neighbours.items(), key=lambda tup: tup[1])
         k_nearest_neighbours = examples_sorted_by_distance[:self.k]
         return self.calculate_final_classification(k_nearest_neighbours)
-
-
-def distance_euclidean(list1, list2):
-    accumulator = 0
-    for x, y in zip(list1, list2):
-        accumulator = accumulator + (x - y) ** 2
-    return accumulator ** .5
 
 
 class knn_factory(abstract_classifier_factory):
@@ -141,10 +140,30 @@ def calculate_evaluation_accuracy_error(data, factory) -> (float, float):
                 if training_set is None:
                     training_set = (data[j][0], data[j][1])
                 else:
-                    np.vstack((training_set[0], data[j][0]))
-                    np.vstack((training_set[1], data[j][1]))
+                    # TODO: np.vstack((training_set[1], data[j][1])) doesn't work when different number of rows (for a vector) +
+                    # it doesn't change the matrix/vector, it returns the new one!
+                    print(np.shape(training_set[0]))
+                    print(np.shape(data[j][0]))
+                    print(np.shape(training_set[1]))
+                    print(np.shape(data[j][1]))
+
+                    print(np.shape(np.vstack((training_set[0], data[j][0]))))
+                    print(np.shape(np.vstack((training_set[1], data[j][1]))))
+
+                    # print(np.shape(training_set[0]))
+                    # print(np.shape(data[j][0]))
+                    # print(np.shape(training_set[1]))
+                    # print(np.shape(data[j][1]))
+                    #
+                    # expansion1 = np.expand_dims(training_set[1], axis=1)
+                    # expansion2 = np.expand_dims(data[j][1], axis=1)
+                    # np.vstack((expansion1, expansion2))
+                    # np.squeeze(expansion1, axis=1).shape
+                    # training_set[1] = expansion1
+                    # print(np.shape(training_set[1]))
+
         classifier = factory.train(training_set[0], training_set[1])
-        if isinstance(factory, knn_factory):
+        if isinstance(factory, knn_factory) or isinstance(factory, Contest_factory):
             for example, n in zip(test_set[0], range(len(test_set[0]))):
                 experiment_count += 1
                 if classifier.classify(example) != test_set[1][n]:
@@ -208,57 +227,6 @@ class ID3_factory(abstract_classifier_factory):
         return ID3_classifier(data, labels)
 
 
-class MultinomialNB_classifier(abstract_classifier):
-    def __init__(self, data: np.ndarray, labels: np.ndarray):
-        """
-        This constructor also trains the classifier by creating the decision tree.
-        :param data: the unlabeled data of the dataset
-        :param labels: the correct labels of the data
-        """
-
-        self.inner_classifier = MultinomialNB()
-        self.inner_classifier.fit(data, labels)
-
-    def classify(self, features) -> int:
-        return self.inner_classifier.predict(features)
-
-
-class MultinomialNB_factory(abstract_classifier_factory):
-    def train(self, data, labels) -> MultinomialNB_classifier:
-        return MultinomialNB_classifier(data, labels)
-
-
-class Contest_classifier(abstract_classifier):
-    def __init__(self, data: np.ndarray, labels: np.ndarray):
-        """
-        This constructor also trains the classifier by creating the decision tree.
-        :param data: the unlabeled data of the dataset
-        :param labels: the correct labels of the data
-        """
-        self.inner_factories = [perceptron_factory(), ID3_factory(), knn_factory(1), knn_factory(5), knn_factory(13)]
-        self.inner_classifiers = []
-        for factory in self.inner_factories:
-            self.inner_classifiers.append(factory.train(data, labels))
-        for c in self.inner_classifiers:
-            if not isinstance(c, knn_classifier):
-                c.inner_classifier.fit(data, labels)
-
-    def classify(self, features) -> int:
-        classification_votes = []
-        for c in self.inner_classifiers:
-            if isinstance(c, knn_classifier):
-                classification_votes.append(c.classify(features))
-            else:
-                classification_votes.append(c.inner_classifier.predict(features))
-
-        return 0 if classification_votes.count(0) > classification_votes.count(1) else 1
-
-
-class Contest_factory(abstract_classifier_factory):
-    def train(self, data, labels) -> Contest_classifier:
-        return Contest_classifier(data, labels)
-
-
 class perceptron_classifier(abstract_classifier):
     def __init__(self, data: np.ndarray, labels: np.ndarray):
         """
@@ -277,6 +245,59 @@ class perceptron_classifier(abstract_classifier):
 class perceptron_factory(abstract_classifier_factory):
     def train(self, data, labels) -> perceptron_classifier:
         return perceptron_classifier(data, labels)
+
+
+# class MultinomialNB_classifier(abstract_classifier):
+#     def __init__(self, data: np.ndarray, labels: np.ndarray):
+#         """
+#         This constructor also trains the classifier by creating the decision tree.
+#         :param data: the unlabeled data of the dataset
+#         :param labels: the correct labels of the data
+#         """
+#
+#         self.inner_classifier = MultinomialNB()
+#         self.inner_classifier.fit(data, labels)
+#
+#     def classify(self, features) -> int:
+#         return self.inner_classifier.predict(features)
+#
+#
+# class MultinomialNB_factory(abstract_classifier_factory):
+#     def train(self, data, labels) -> MultinomialNB_classifier:
+#         return MultinomialNB_classifier(data, labels)
+
+
+class Contest_classifier(abstract_classifier):
+    def __init__(self, data: np.ndarray, labels: np.ndarray):
+        """
+        This constructor also trains the classifier by creating the decision tree.
+        :param data: the unlabeled data of the dataset
+        :param labels: the correct labels of the data
+        """
+        self.inner_factories = [perceptron_factory(), ID3_factory(), knn_factory(1)]
+        self.inner_classifiers = []
+        for factory in self.inner_factories:
+            self.inner_classifiers.append(factory.train(data, labels))
+        for c in self.inner_classifiers:
+            if not isinstance(c, knn_classifier):
+                c.inner_classifier.fit(data, labels)
+
+    def classify(self, feature) -> int:
+        classification_votes = []
+        for c in self.inner_classifiers:
+            if isinstance(c, knn_classifier):
+                prediction = c.classify(feature)
+                classification_votes.append(prediction)
+            else:
+                prediction = c.inner_classifier.predict(feature.reshape(1, -1))
+                classification_votes.append(int(prediction[0]))
+
+        return 0 if classification_votes.count(0) > classification_votes.count(1) else 1
+
+
+class Contest_factory(abstract_classifier_factory):
+    def train(self, data, labels) -> Contest_classifier:
+        return Contest_classifier(data, labels)
 
 
 def question7():
@@ -366,7 +387,10 @@ def contest(num_folds=2):
 def main():
     # dataset is a 3-tuple consisting of:
     # (2D ndarray of training features, list of labels,2D ndarray of testing features)
-    # dataset = load_data()
+    num_folds = 4
+    dataset = load_data()
+    split_crosscheck_groups(dataset, num_folds)
+    print("split complete")
     # data = dataset[0]
     # labels = dataset[1]
     # test_set = dataset[2]
@@ -374,14 +398,15 @@ def main():
     # classifier = factory.train(data=data, labels=labels)
     # result = classifier.classify(test_set[0])
     # print(result)
-    # load_k_fold_data(2)
+    # load_k_fold_data(num_folds)
     # patients, labels, test = load_data()
-    # split_crosscheck_groups(patients, labels, 2)
+
     # question5()
     # question7()
     # dataset = load_data()
     # checking_bad_features(dataset)
-    contest(2)
+    contest(num_folds)
+
 
 if __name__ == '__main__':
     main()
