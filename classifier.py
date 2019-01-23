@@ -268,6 +268,7 @@ class Contest_classifier(abstract_classifier):
         """
         self.inner_factories = [perceptron_factory(), ID3_factory(), knn_factory(1)]
         self.inner_classifiers = []
+
         for factory in self.inner_factories:
             self.inner_classifiers.append(factory.train(data, labels))
         for c in self.inner_classifiers:
@@ -303,7 +304,7 @@ def question7():
 def evaluate_without_known_bad_features(classifier_factory: abstract_classifier_factory, k: int) -> (float, float):
     num_folds = k
     data = {}
-    known_bad_features = [33]
+    known_bad_features = [33, 50, 51, 132, 15]
     for i in range(1, num_folds + 1):
         data[i - 1] = load_k_fold_data(i)
         for bad_feature in known_bad_features:
@@ -319,7 +320,7 @@ def evaluate_without_known_bad_features(classifier_factory: abstract_classifier_
 def evaluate_without_bad_features(classifier_factory: abstract_classifier_factory, k: int):
     num_folds = k
     data = {}
-    known_bad_features = [33]
+    known_bad_features = [33, 50, 51, 132, 15]
     for i in range(1, num_folds + 1):
         data[i - 1] = load_k_fold_data(i)
         for bad_feature in known_bad_features:
@@ -333,7 +334,13 @@ def evaluate_without_bad_features(classifier_factory: abstract_classifier_factor
                                           data_without_feature[fold][1])
         accuracies[bad_feature] = calculate_evaluation_accuracy_error(data_without_feature, classifier_factory)[0]
     sorted_accuracies = sorted(accuracies.items(), key=lambda tup: tup[1], reverse=True)
-    print(f'{classifier_factory} classifier: {sorted_accuracies[:20]}')
+    print(f'{classifier_factory} classifier: {sorted_accuracies[:15]}')
+    keys_list = []
+    for j in range(15):
+        keys_list.append(sorted_accuracies[j][0])
+
+    return keys_list
+
 
     # data is now a dictionary of the form {i:(features, labels)} where i is the key
     # and (features, labels) is the value, which is a tuple of the features matrix
@@ -342,44 +349,45 @@ def evaluate_without_bad_features(classifier_factory: abstract_classifier_factor
 
 def checking_bad_features(dataset):
     # creating folds
-    num_folds = 2
-    # split_crosscheck_groups(dataset, num_folds=num_folds, is_testing=True)
-    # print('splitting to folds completed.')
+    num_folds = 4
+    split_crosscheck_groups(dataset, num_folds=num_folds)
+    print('splitting to folds completed.')
 
-    # evaluate_without_bad_features(ID3_factory(), num_folds)
-    # evaluate_without_bad_features(perceptron_factory(), num_folds)
-
+    lst1 = evaluate_without_bad_features(ID3_factory(), num_folds)
+    lst2 = evaluate_without_bad_features(perceptron_factory(), num_folds)
+    print(list(set(lst1) & set(lst2)))
     # Naive Bayesian
     # factory = MultinomialNB_factory()
     # evaluate_without_bad_features(factory, num_folds)
 
     # KNN
-    k_list = [1, 3, 5, 7, 13]
-    results = []
-    for k in k_list:
-        print(f'k={k}')
-        accuracy, error = evaluate_without_known_bad_features(knn_factory(k), num_folds)
-        results.append((k, accuracy, error))
-    print(results)
+    # k_list = [1, 3, 5, 7, 13]
+    # results = []
+    # for k in k_list:
+    #     print(f'k={k}')
+    #     accuracy, error = evaluate_without_known_bad_features(knn_factory(k), num_folds)
+    #     results.append((k, accuracy, error))
+    # print(results)
 
 
-def evaluate_for_contest(classifier_factory: abstract_classifier_factory, k: int) -> (float, float):
-    num_folds = k
-    data = {}
-    known_bad_features = [33]
-    for i in range(1, num_folds + 1):
-        data[i - 1] = load_k_fold_data(i)
-        for bad_feature in known_bad_features:
-            data[i - 1] = (np.delete(data[i - 1][0], bad_feature, 1), data[i - 1][1])
-    # data is now a dictionary of the form {i:(features, labels)} where i is the key
-    # and (features, labels) is the value, which is a tuple of the features matrix
-    # and the labels vector
-    return calculate_evaluation_accuracy_error(data, classifier_factory)
 
 
 def contest(num_folds=2):
-    accuracy, error = evaluate_for_contest(Contest_factory(), num_folds)
+    accuracy, error = evaluate_without_known_bad_features(Contest_factory(), num_folds)
     print(accuracy, error)
+
+def results_for_contest():
+    dataset = load_data()
+    known_bad_features = [33, 50, 51, 132, 15]
+    for bad_feature in known_bad_features:
+        dataset = (np.delete(dataset[0], bad_feature, 1), dataset[1], np.delete(dataset[2], bad_feature, 1))
+    classifier = Contest_factory().train(dataset[0], dataset[1])
+    results = []
+    for test_example in dataset[2]:
+        results.append(classifier.classify(test_example))
+    write_prediction(results)
+
+
 
 
 def main():
@@ -387,12 +395,12 @@ def main():
 
     # question3()
     # question5()
-    question7()
+    # question7()
     # for num_folds in {4, 7, 10}:
     #     split_crosscheck_groups(dataset, num_folds)
     #     print("split complete")
     #     contest(num_folds)
-
+    results_for_contest()
 
 if __name__ == '__main__':
     main()
