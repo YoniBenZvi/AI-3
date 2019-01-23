@@ -188,12 +188,13 @@ def question3():
 
 
 def question5():
+    num_folds = 2
     k_list = [1, 3, 5, 7, 13]
     results = []
     for k in k_list:
         print(f'k={k}')
         factory = knn_factory(k)
-        accuracy, error = evaluate(factory, 2)
+        accuracy, error = evaluate(factory, num_folds)
         results.append((k, accuracy, error))
     export_to_csv(results, 'experiments6.csv')
 
@@ -292,19 +293,11 @@ class Contest_factory(abstract_classifier_factory):
 
 
 def question7():
-    # ID3
-    id3_results = []
-    factory = ID3_factory()
-    accuracy, error = evaluate(factory, 2)
-    id3_results.append((1, accuracy, error))
-    export_to_csv(id3_results, 'experiments12ID3.csv')
-
-    # Perceptron
-    perceptron_results = []
-    factory = perceptron_factory()
-    accuracy, error = evaluate(factory, 2)
-    perceptron_results.append((2, accuracy, error))
-    export_to_csv(perceptron_results, 'experiments12perceptron.csv')
+    num_folds = 2
+    id3_accuracy, id3_error = evaluate(ID3_factory(), num_folds)
+    perceptron_accuracy, perceptron_error = evaluate(perceptron_factory(), num_folds)
+    results = [(1, id3_accuracy, id3_error), (2, perceptron_accuracy, perceptron_error)]
+    export_to_csv(results, 'experiments12.csv')
 
 
 def evaluate_without_known_bad_features(classifier_factory: abstract_classifier_factory, k: int) -> (float, float):
@@ -393,8 +386,8 @@ def main():
     # (2D ndarray of training features, list of labels,2D ndarray of testing features)
 
     # question3()
-    question5()
-    # question7()
+    # question5()
+    question7()
     # for num_folds in {4, 7, 10}:
     #     split_crosscheck_groups(dataset, num_folds)
     #     print("split complete")
