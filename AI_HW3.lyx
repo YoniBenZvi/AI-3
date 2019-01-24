@@ -1228,7 +1228,11 @@ ID3
 \lang english
 Perceptron
 \lang hebrew
-, ומסווג
+ )שניהם מתוך ספריית 
+\lang english
+sklearn
+\lang hebrew
+(, ומסווג
 \family roman
 \series medium
 \shape up

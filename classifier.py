@@ -271,7 +271,7 @@ class perceptron_factory(abstract_classifier_factory):
 
 class Contest_classifier(abstract_classifier):
     def __init__(self, data: np.ndarray, labels: np.ndarray):
-        self.inner_factories = [perceptron_factory(), ID3_factory(), knn_factory(1)]
+        self.inner_factories = [perceptron_factory(), ID3_factory(), knn_factory(1), knn_factory(7), knn_factory(17)]
         self.inner_classifiers = []
 
         for factory in self.inner_factories:
