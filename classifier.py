@@ -312,7 +312,7 @@ def evaluate_without_known_bad_features(classifier_factory: abstract_classifier_
     """
     num_folds = k
     data = {}
-    known_bad_features = [33, 50, 51, 132, 15]
+    known_bad_features = [33, 132, 51, 50, 15, 181, 176, 6]
     for i in range(1, num_folds + 1):
         data[i - 1] = load_k_fold_data(i)
         for bad_feature in known_bad_features:
@@ -332,7 +332,7 @@ def evaluate_without_bad_features(classifier_factory: abstract_classifier_factor
        """
     num_folds = k
     data = {}
-    known_bad_features = [33, 50, 51, 132, 15]
+    known_bad_features = [33, 132, 51, 50, 15, 181, 176, 6]
     for i in range(1, num_folds + 1):
         data[i - 1] = load_k_fold_data(i)
         for bad_feature in known_bad_features:
@@ -384,7 +384,7 @@ def evaluate_without_bad_features(classifier_factory: abstract_classifier_factor
 
 def results_for_contest():
     dataset = load_data()
-    known_bad_features = [33, 50, 51, 132, 15]
+    known_bad_features = [33, 132, 51, 50, 15, 181, 176, 6]
     for bad_feature in known_bad_features:
         dataset = (np.delete(dataset[0], bad_feature, 1), dataset[1], np.delete(dataset[2], bad_feature, 1))
     classifier = Contest_factory().train(dataset[0], dataset[1])
