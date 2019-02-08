@@ -919,16 +919,16 @@ num_folds=
 \end_inset
 
  והביצועים הגרועים ביותר התקבלו עבור 
-\begin_inset Formula $k=7$
+\begin_inset Formula $k=13$
 \end_inset
 
 .
  ערכי הדיוק הממוצע הם 
-\begin_inset Formula $0.953$
+\begin_inset Formula $0.957$
 \end_inset
 
  ו-
-\begin_inset Formula $0.937$
+\begin_inset Formula $0.933$
 \end_inset
 
  בהתאמה.
@@ -942,7 +942,7 @@ folds
 \end_inset
 
  וגרועים ביותר עבור 
-\begin_inset Formula $k=7$
+\begin_inset Formula $k=13$
 \end_inset
 
  משום שהגיוני שככל שאדם דומה יותר לאדם אחר )מבחינת נתונים גופניים(, כך סביר
@@ -950,24 +950,20 @@ folds
  לכן, במקרה שלנו, סביר שלאדם יהיו בעיות לב אם לאדם הדומה לו ביותר מבחינת
  נתונים גופניים יש בעיות לב, והתחשבות באנשים דומים פחות יכולה אף לפגוע בדיוק
  המסווג כפי שניתן לראות בתוצאותינו.
- בתוצאותינו ניתן כמו-כן להבחין במגמת ירידה בטיב הביצועים ככל שגדל ערכו של
- 
+ בתוצאותינו ניתן כמו-כן להבחין במגמת ירידה כללית בטיב הביצועים ככל שגדל
+ ערכו של 
 \begin_inset Formula $k$
 \end_inset
 
-, דבר שמחזק את הנימוק לעיל )הדיוקים הממוצעים עבור 
-\begin_inset Formula $k=3,5$
+, דבר שמחזק את הנימוק לעיל )העלייה הקטנה מ- 
+\begin_inset Formula $k=5$
 \end_inset
 
- כמעט זהים וכנ
-\begin_inset Quotes srd
+ ל- 
+\begin_inset Formula $k=7$
 \end_inset
 
-ל עבור 
-\begin_inset Formula $k=7,13$
-\end_inset
-
-(.
+ אינה משמעותית ביחס לשינויים האחרים שהיו כולם במגמת ירידה(.
 \end_layout
 
 \begin_layout Subsection*
@@ -1232,7 +1228,7 @@ Perceptron
 \lang english
 sklearn
 \lang hebrew
-(, ומסווג
+(, ושלושה מסווגי
 \family roman
 \series medium
 \shape up
@@ -1266,10 +1262,10 @@ nn
 \end_inset
 
  עבור 
-\begin_inset Formula $k=1$
+\begin_inset Formula $k\in\left\{ 1,7,17\right\} $
 \end_inset
 
- )שהניב את התוצאות המדוייקות ביותר בתהליך הפיתוח(.
+.
  נעיר כי את רמת הדיוק של המסווג לאורך כל התהליך, בחנו בעזרת שיטת
 \family roman
 \series medium
@@ -1297,7 +1293,7 @@ nn
 \noun default
 \color inherit
 \lang english
-Stratified 
+stratified 
 \begin_inset Formula $k$
 \end_inset
 
@@ -1843,10 +1839,10 @@ evaluate_without_known_bad_features
 \end_inset
 
 כ 
-\begin_inset Formula $5$
+\begin_inset Formula $8$
 \end_inset
 
- תכונות שאכן הניבו שיפור קטן בדיוק הסיווג.
+ תכונות שאכן הניבו שיפור קטן בדיוק הסיווג )ניתן לראות את מספרי התכונות בקוד(.
 \end_layout
 
 \begin_layout Enumerate
